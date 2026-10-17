@@ -74,7 +74,7 @@ python3 design/generate_icons.py
 
 ## 开发
 
-需要 Flutter 3.35+（Dart 3.9+）。本项目使用 Flutter 3.47 / Dart 3.13 开发。
+需要 Flutter 3.47+（Dart 3.13+）。本项目使用 Flutter 3.47.7 / Dart 3.13.5 开发。
 
 ```bash
 flutter pub get
@@ -82,7 +82,7 @@ flutter run -d linux     # Linux
 flutter run -d windows   # Windows（需在 Windows 上执行）
 ```
 
-Linux 构建依赖：`clang cmake ninja-build pkg-config libgtk-3-dev libx11-dev libxi-dev`
+Linux 构建依赖：`clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libx11-dev libxi-dev`
 （tray_manager 的原生托盘核心需要 X11/Xi 开发文件）。
 Windows 构建依赖：Visual Studio 2022（含“使用 C++ 的桌面开发”工作负载）。
 
@@ -134,7 +134,7 @@ aria2 原生支持在同一端口上通过 WebSocket 或 HTTP 调用 JSON-RPC。
 首位带上 `token:<密钥>`；如果其他软件不支持密钥，可在设置中把
 “RPC 密钥”留空并保存，此时不需要 token（RPC 仍只监听本机）。
 
-## 构建
+## 构建与发布包
 
 ```bash
 flutter build linux --release
@@ -143,6 +143,35 @@ flutter build windows --release   # 在 Windows 上执行
 
 产物分别在 `build/linux/x64/release/bundle` 与 `build/windows/x64/runner/Release`。
 把整个 bundle/Release 目录一起分发即可，aria2 会在首次运行时自动安装到用户缓存目录。
+
+### 一键打包
+
+Linux：
+
+```bash
+./scripts/build_linux_release.sh
+```
+
+Windows（PowerShell）：
+
+```powershell
+.\scripts\build_windows_release.ps1
+```
+
+生成：
+
+- `dist/faria2-linux-x64.tar.gz`（arm64 上为 `dist/faria2-linux-arm64.tar.gz`）
+- `dist/faria2-windows-x64.zip`
+
+压缩包内顶层目录为 `faria2/`，解压后运行 `faria2/faria2` 或
+`faria2\faria2.exe`。详细依赖与用法见 [scripts/README.md](scripts/README.md)。
+
+### GitHub Actions 自动发布
+
+推送到 `main` / `master` 会自动在 Ubuntu 与 Windows 上构建，并把两个压缩包
+上传到该次 Actions 运行的 Artifacts；推送 `v*` 标签（例如 `v1.0.0`）还会创建
+对应的 GitHub Release 并附上压缩包。也可以在 **Actions → Build release →
+Run workflow** 手动触发。
 
 ## 测试
 
@@ -175,15 +204,21 @@ lib/
     engine_controller.dart     引擎生命周期状态机
     download_manager.dart      任务轮询与操作
     download_client.dart       带进度的 HTTP 下载
+    network_proxy.dart         网络代理配置与 HTTP 客户端
+    tracker_service.dart       Tracker 订阅获取、合并与去重
+    license_info.dart          MIT 许可证注册
     tray_service.dart          系统托盘图标与菜单
     platform_launcher.dart     打开文件/文件夹
     formatting.dart            大小/速度/时间格式化
     models/                    任务与全局状态模型
   ui/                          主界面、设置、添加任务、控件
     window/                    无边框标题栏、窗口缩放、WindowShell
-assets/icons/                  应用图标（SVG/PNG/ICO）与 Flutter 标志路径
+assets/icons/                  应用图标（SVG/PNG/ICO）
 design/generate_icons.py       图标生成脚本
+scripts/                       本地 Linux/Windows 发布打包脚本
+.github/workflows/             GitHub Actions 自动构建与发布
 test/                          单元测试与端到端测试
+LICENSE                        MIT 许可证
 ```
 
 ## 常见问题
