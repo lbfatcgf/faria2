@@ -1,0 +1,29 @@
+name: faria2
+description: "faria2 - 基于 aria2 的跨平台下载器（Windows / Linux）"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  archive: ^4.5.2
+  http: ^1.6.0
+  path: ^1.9.1
+  tray_manager: ^0.8.0
+  window_manager: ^0.5.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - LICENSE
+    - assets/icons/tray_icon.png
+    - assets/icons/app_icon.png
+    - assets/icons/app_icon.ico
