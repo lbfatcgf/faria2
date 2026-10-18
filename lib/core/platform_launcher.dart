@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+
 /// Opens files/folders with the platform file manager.
 class PlatformLauncher {
   PlatformLauncher._();
@@ -50,17 +52,21 @@ class PlatformLauncher {
 
   /// Arguments for `cmd.exe` that reveal [path] in Explorer.
   static List<String> windowsRevealArguments(String path) {
-    return <String>['/c', 'explorer.exe /select,"$path"'];
+    path = path.replaceAll('/', r'\');
+    if (kDebugMode) {
+      print(path);
+    }
+    return <String>['/c', 'explorer.exe', '/select,$path'];
   }
 
   /// Arguments for `cmd.exe` that open [path] with its associated app.
   static List<String> windowsOpenFileArguments(String path) {
-    return <String>['/c', 'start "" "$path"'];
+    return <String>['/c', 'start', path];
   }
 
   /// Arguments for `cmd.exe` that open [path] in Explorer.
   static List<String> windowsOpenDirectoryArguments(String path) {
-    return <String>['/c', 'explorer.exe "$path"'];
+    return <String>['/c', 'start', 'explorer.exe', path];
   }
 
   static Future<void> _run(String executable, List<String> arguments) async {
