@@ -777,7 +777,7 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 16),
             _section('关于', <Widget>[
               Text(
-                'faria2 1.0.4',
+                'faria2 1.0.5',
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               const SizedBox(height: 6),

@@ -1,7 +1,7 @@
 name: faria2
 description: "faria2 - 基于 aria2 的跨平台下载器（Windows / Linux）"
 publish_to: 'none'
-version: 1.0.4
+version: 1.0.5
 
 environment:
   sdk: ^3.9.0
