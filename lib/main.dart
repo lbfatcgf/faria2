@@ -19,12 +19,13 @@ Future<void> main() async {
     titleBarStyle: TitleBarStyle.hidden,
     windowButtonVisibility: false,
   );
-  unawaited(
-    windowManager.waitUntilReadyToShow(options, () async {
-      await windowManager.show();
-      await windowManager.focus();
-    }),
-  );
+  // Apply the window options. The native runners do not show the window on
+  // their own; Faria2App decides after settings and the tray are ready.
+  try {
+    await windowManager.waitUntilReadyToShow(options);
+  } on Object {
+    // Continue; Faria2App will show the window when needed.
+  }
 
   runApp(const Faria2App());
 }

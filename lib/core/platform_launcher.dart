@@ -9,7 +9,7 @@ class PlatformLauncher {
       return;
     }
     if (Platform.isWindows) {
-      await _run('explorer', <String>[path]);
+      await _run('cmd.exe', windowsOpenDirectoryArguments(path));
     } else if (Platform.isLinux) {
       await _run('xdg-open', <String>[path]);
     }
@@ -20,7 +20,9 @@ class PlatformLauncher {
       return;
     }
     if (Platform.isWindows) {
-      await _run('explorer', <String>[path]);
+      // "start" resolves the file association. The empty quoted argument is
+      // the window title so a path containing spaces is not treated as one.
+      await _run('cmd.exe', windowsOpenFileArguments(path));
     } else if (Platform.isLinux) {
       await _run('xdg-open', <String>[path]);
     }
@@ -32,7 +34,10 @@ class PlatformLauncher {
       return;
     }
     if (Platform.isWindows) {
-      await _run('explorer', <String>['/select,', path]);
+      // Calling explorer.exe directly from Dart can lose the /select argument
+      // (especially for paths containing spaces). Going through cmd.exe keeps
+      // /select,"<path>" intact and reliably selects the file.
+      await _run('cmd.exe', windowsRevealArguments(path));
       return;
     }
     final type = FileSystemEntity.typeSync(path);
@@ -41,6 +46,21 @@ class PlatformLauncher {
     } else {
       await openDirectory(File(path).parent.path);
     }
+  }
+
+  /// Arguments for `cmd.exe` that reveal [path] in Explorer.
+  static List<String> windowsRevealArguments(String path) {
+    return <String>['/c', 'explorer.exe /select,"$path"'];
+  }
+
+  /// Arguments for `cmd.exe` that open [path] with its associated app.
+  static List<String> windowsOpenFileArguments(String path) {
+    return <String>['/c', 'start "" "$path"'];
+  }
+
+  /// Arguments for `cmd.exe` that open [path] in Explorer.
+  static List<String> windowsOpenDirectoryArguments(String path) {
+    return <String>['/c', 'explorer.exe "$path"'];
   }
 
   static Future<void> _run(String executable, List<String> arguments) async {

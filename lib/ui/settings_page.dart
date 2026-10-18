@@ -51,6 +51,7 @@ class _SettingsPageState extends State<SettingsPage> {
   late int _split;
   late AppThemeMode _themeMode;
   late bool _minimizeToTray;
+  late bool _startMinimized;
   bool _saving = false;
 
   @override
@@ -76,6 +77,7 @@ class _SettingsPageState extends State<SettingsPage> {
     _split = settings.split;
     _themeMode = settings.themeMode;
     _minimizeToTray = settings.minimizeToTray;
+    _startMinimized = settings.startMinimized;
   }
 
   @override
@@ -117,6 +119,7 @@ class _SettingsPageState extends State<SettingsPage> {
       split: _split,
       themeMode: _themeMode,
       minimizeToTray: _minimizeToTray,
+      startMinimized: _startMinimized,
       useProxy: _useProxy,
       proxyUrl: _proxyUrl.text.trim().isEmpty
           ? defaultProxyAddress
@@ -468,6 +471,13 @@ class _SettingsPageState extends State<SettingsPage> {
             _section('窗口与托盘', <Widget>[
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
+                value: _startMinimized,
+                onChanged: (value) => setState(() => _startMinimized = value),
+                title: const Text('启动时最小化到系统托盘'),
+                subtitle: const Text('启动后不显示主窗口，可从托盘菜单显示；托盘不可用时会自动显示窗口。'),
+              ),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
                 value: _minimizeToTray,
                 onChanged: (value) => setState(() => _minimizeToTray = value),
                 title: const Text('关闭窗口时最小化到系统托盘'),
@@ -767,7 +777,7 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 16),
             _section('关于', <Widget>[
               Text(
-                'faria2 1.0.0',
+                'faria2 1.0.1',
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               const SizedBox(height: 6),
@@ -799,7 +809,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 onPressed: () => showLicensePage(
                   context: context,
                   applicationName: 'faria2',
-                  applicationVersion: '1.0.0',
+                  applicationVersion: '1.0.1',
                   applicationLegalese: 'MIT License',
                 ),
                 icon: const Icon(Icons.article_outlined, size: 18),

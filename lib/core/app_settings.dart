@@ -32,6 +32,7 @@ class AppSettings {
     this.rpcSecret = '',
     this.themeMode = AppThemeMode.system,
     this.minimizeToTray = true,
+    this.startMinimized = true,
     this.useProxy = false,
     this.proxyUrl = defaultProxyAddress,
     this.trackerUrls = const <String>[],
@@ -59,6 +60,10 @@ class AppSettings {
   /// When true, closing the window hides it to the system tray and keeps
   /// downloads running in the background.
   final bool minimizeToTray;
+
+  /// When true, the main window starts hidden in the system tray. If the tray
+  /// is unavailable (or the engine fails), the window is shown instead.
+  final bool startMinimized;
 
   /// Whether aria2c and faria2's own HTTP requests use [proxyUrl].
   final bool useProxy;
@@ -92,6 +97,7 @@ class AppSettings {
     String? rpcSecret,
     AppThemeMode? themeMode,
     bool? minimizeToTray,
+    bool? startMinimized,
     bool? useProxy,
     String? proxyUrl,
     List<String>? trackerUrls,
@@ -110,6 +116,7 @@ class AppSettings {
       rpcSecret: rpcSecret ?? this.rpcSecret,
       themeMode: themeMode ?? this.themeMode,
       minimizeToTray: minimizeToTray ?? this.minimizeToTray,
+      startMinimized: startMinimized ?? this.startMinimized,
       useProxy: useProxy ?? this.useProxy,
       proxyUrl: proxyUrl ?? this.proxyUrl,
       trackerUrls: trackerUrls ?? this.trackerUrls,
@@ -129,6 +136,7 @@ class AppSettings {
       'rpcSecret': rpcSecret,
       'themeMode': themeMode.name,
       'minimizeToTray': minimizeToTray,
+      'startMinimized': startMinimized,
       'useProxy': useProxy,
       'proxyUrl': proxyUrl,
       'trackerUrls': trackerUrls,
@@ -161,6 +169,9 @@ class AppSettings {
       themeMode: AppThemeMode.parse(json['themeMode']),
       minimizeToTray: json['minimizeToTray'] is bool
           ? json['minimizeToTray'] as bool
+          : true,
+      startMinimized: json['startMinimized'] is bool
+          ? json['startMinimized'] as bool
           : true,
       useProxy: json['useProxy'] is bool ? json['useProxy'] as bool : false,
       proxyUrl: _asString(json['proxyUrl']).isEmpty

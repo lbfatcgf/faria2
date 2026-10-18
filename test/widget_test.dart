@@ -187,6 +187,7 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     expect(find.text('窗口与托盘'), findsOneWidget);
+    expect(find.text('启动时最小化到系统托盘'), findsOneWidget);
     expect(find.text('关闭窗口时最小化到系统托盘'), findsOneWidget);
 
     await tester.scrollUntilVisible(

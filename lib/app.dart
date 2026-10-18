@@ -259,11 +259,22 @@ class _Faria2AppState extends State<Faria2App> with WindowListener {
         _downloads = downloads;
         _trackerService = trackerService;
       });
+      if (!settings.startMinimized) {
+        await _showWindow();
+      }
       await _applyWindowIcon(paths);
       await _initTray(paths, settings, downloads);
+      if (!mounted) {
+        return;
+      }
+      if (settings.startMinimized && !_trayReady) {
+        // Never leave the user with no window when the tray is unavailable.
+        await _showWindow();
+      }
       unawaited(trackerService.refresh());
       await engine.start();
     } on Object catch (error) {
+      await _showWindow();
       if (!mounted) {
         return;
       }
@@ -290,6 +301,10 @@ class _Faria2AppState extends State<Faria2App> with WindowListener {
     } else {
       // Re-apply the trackers after the engine restarts.
       _appliedTrackers = '';
+    }
+    if (engine.phase == EnginePhase.failed) {
+      // Never leave the user with only a hidden window when startup fails.
+      unawaited(_showWindow());
     }
     _updateTray();
     setState(() {});

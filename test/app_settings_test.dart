@@ -11,6 +11,7 @@ void main() {
     expect(settings.themeMode, AppThemeMode.system);
     expect(settings.downloadDir, '/tmp/downloads');
     expect(settings.minimizeToTray, isTrue);
+    expect(settings.startMinimized, isTrue);
     expect(settings.useProxy, isFalse);
     expect(settings.proxyUrl, defaultProxyAddress);
     expect(settings.trackerUrls, isEmpty);
@@ -29,6 +30,7 @@ void main() {
       rpcSecret: 'secret',
       themeMode: AppThemeMode.dark,
       minimizeToTray: false,
+      startMinimized: false,
       useProxy: true,
       proxyUrl: 'http://127.0.0.1:7891',
       trackerUrls: <String>['https://extra.example/list.txt'],
@@ -48,12 +50,21 @@ void main() {
     expect(restored.rpcSecret, 'secret');
     expect(restored.themeMode, AppThemeMode.dark);
     expect(restored.minimizeToTray, isFalse);
+    expect(restored.startMinimized, isFalse);
     expect(restored.useProxy, isTrue);
     expect(restored.proxyUrl, 'http://127.0.0.1:7891');
     expect(restored.trackerUrls, <String>['https://extra.example/list.txt']);
     expect(restored.manualTrackers, <String>[
       'udp://manual.example:1/announce',
     ]);
+  });
+
+  test('startMinimized defaults to true for existing settings', () {
+    final settings = AppSettings.fromJson(<String, dynamic>{
+      'downloadDir': '/downloads',
+    }, defaultDownloadDir: '/downloads');
+    expect(settings.startMinimized, isTrue);
+    expect(settings.copyWith(startMinimized: false).startMinimized, isFalse);
   });
 
   test('invalid values are clamped', () {
@@ -76,6 +87,7 @@ void main() {
       isTrue,
     );
     expect(base.engineEquals(base.copyWith(split: 2)), isFalse);
+    expect(base.engineEquals(base.copyWith(startMinimized: false)), isTrue);
     expect(base.engineEquals(base.copyWith(useProxy: true)), isFalse);
     expect(
       base.engineEquals(base.copyWith(proxyUrl: '127.0.0.1:7891')),
