@@ -71,11 +71,11 @@ $env:FLUTTER = 'C:\path\to\flutter\bin\flutter.bat'
 
 工作流：[`.github/workflows/build-release.yml`](../.github/workflows/build-release.yml)
 
-- 推送到 `main` / `master` 会自动：
+- 只有推送 `v*` 标签（例如 `v1.0.1`）才会自动构建：
   1. 在 Ubuntu 上分析、测试并构建 Linux x64 压缩包；
   2. 在 Windows 上构建 Windows x64 压缩包；
-  3. 把两个压缩包上传到该次运行的 Artifacts。
-- 推送 `v*` 标签（例如 `v1.0.0`）还会把两个压缩包附加到对应的 GitHub Release。
+  3. 把两个压缩包附加到对应的 GitHub Release。
+- `main` / `master` 的普通提交不会触发工作流。
 - 也可以在 GitHub 的 **Actions → Build release → Run workflow** 手动触发，
   构建完成后从该次运行的 Artifacts 下载压缩包（不会创建 Release）。
 

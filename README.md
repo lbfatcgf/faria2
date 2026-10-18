@@ -170,10 +170,10 @@ Windows（PowerShell）：
 
 ### GitHub Actions 自动发布
 
-推送到 `main` / `master` 会自动在 Ubuntu 与 Windows 上构建，并把两个压缩包
-上传到该次 Actions 运行的 Artifacts；推送 `v*` 标签（例如 `v1.0.0`）还会创建
-对应的 GitHub Release 并附上压缩包。也可以在 **Actions → Build release →
-Run workflow** 手动触发。
+只有推送 `v*` 标签（例如 `v1.0.1`）才会自动构建：在 Ubuntu 与 Windows 上
+分别生成压缩包，并创建对应的 GitHub Release。`main` / `master` 的普通提交
+不会触发工作流。也可以在 **Actions → Build release → Run workflow** 手动触发，
+构建完成后从该次运行的 Artifacts 下载压缩包（不会创建 Release）。
 
 ## 测试
 
