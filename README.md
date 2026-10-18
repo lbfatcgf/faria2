@@ -160,10 +160,10 @@ Windows（PowerShell）：
 .\scripts\build_windows_release.ps1
 ```
 
-生成：
+生成（版本号来自 `pubspec.yaml`，构建号 `+N` 会被去掉）：
 
-- `dist/faria2-linux-x64.tar.gz`（arm64 上为 `dist/faria2-linux-arm64.tar.gz`）
-- `dist/faria2-windows-x64.zip`
+- `dist/faria2-1.0.1-linux-x64.tar.gz`（arm64 上为 `dist/faria2-1.0.1-linux-arm64.tar.gz`）
+- `dist/faria2-1.0.1-windows-x64.zip`
 
 压缩包内顶层目录为 `faria2/`，解压后运行 `faria2/faria2` 或
 `faria2\faria2.exe`。详细依赖与用法见 [scripts/README.md](scripts/README.md)。
@@ -171,9 +171,11 @@ Windows（PowerShell）：
 ### GitHub Actions 自动发布
 
 只有推送 `v*` 标签（例如 `v1.0.1`）才会自动构建：在 Ubuntu 与 Windows 上
-分别生成压缩包，并创建对应的 GitHub Release。`main` / `master` 的普通提交
-不会触发工作流。也可以在 **Actions → Build release → Run workflow** 手动触发，
-构建完成后从该次运行的 Artifacts 下载压缩包（不会创建 Release）。
+分别生成带版本号的压缩包（如 `faria2-1.0.1-linux-x64.tar.gz`、
+`faria2-1.0.1-windows-x64.zip`），并创建对应的 GitHub Release。
+`main` / `master` 的普通提交不会触发工作流。也可以在
+**Actions → Build release → Run workflow** 手动触发，构建完成后从该次运行的
+Artifacts 下载压缩包（不会创建 Release）。
 
 ## 测试
 

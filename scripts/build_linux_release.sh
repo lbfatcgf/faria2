@@ -18,6 +18,14 @@ case "$(uname -m)" in
     ;;
 esac
 
+VERSION="${VERSION:-$(sed -n 's/^version:[[:space:]]*\([^+[:space:]]*\).*/\1/p' pubspec.yaml | head -n 1)}"
+VERSION="${VERSION#v}"
+if [ -z "$VERSION" ]; then
+  echo "error: cannot determine version from pubspec.yaml" >&2
+  exit 1
+fi
+
+echo "==> version $VERSION"
 echo "==> flutter config --enable-linux-desktop"
 "$FLUTTER" config --enable-linux-desktop >/dev/null
 
@@ -34,7 +42,7 @@ if [ ! -x "$BUNDLE/faria2" ]; then
 fi
 
 STAGE="dist/stage/faria2"
-ARCHIVE="dist/faria2-linux-$ARCH.tar.gz"
+ARCHIVE="dist/faria2-$VERSION-linux-$ARCH.tar.gz"
 rm -rf "dist/stage"
 mkdir -p "$STAGE"
 cp -a "$BUNDLE/." "$STAGE/"

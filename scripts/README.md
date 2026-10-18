@@ -17,18 +17,18 @@ sudo apt-get install -y clang cmake ninja-build pkg-config \
 ./scripts/build_linux_release.sh
 ```
 
-输出：
+输出（版本号自动从 `pubspec.yaml` 读取，构建号 `+N` 会被去掉）：
 
 ```text
-dist/faria2-linux-x64.tar.gz
-# arm64 机器上为 dist/faria2-linux-arm64.tar.gz
+dist/faria2-1.0.1-linux-x64.tar.gz
+# arm64 机器上为 dist/faria2-1.0.1-linux-arm64.tar.gz
 ```
 
 压缩包内顶层目录为 `faria2/`，包含可执行文件、Flutter 运行库以及
 `README.md`、`LICENSE`。运行方式：
 
 ```bash
-tar -xzf dist/faria2-linux-x64.tar.gz
+tar -xzf dist/faria2-1.0.1-linux-x64.tar.gz
 ./faria2/faria2
 ```
 
@@ -45,13 +45,27 @@ tar -xzf dist/faria2-linux-x64.tar.gz
 输出：
 
 ```text
-dist/faria2-windows-x64.zip
+dist/faria2-1.0.1-windows-x64.zip
 ```
 
 压缩包内顶层目录为 `faria2`，解压后运行：
 
 ```text
 faria2\faria2.exe
+```
+
+## 指定版本
+
+默认从 `pubspec.yaml` 的 `version` 读取（例如 `1.0.1+2` 取 `1.0.1`）。
+也可以显式覆盖：
+
+```bash
+VERSION=1.0.1 ./scripts/build_linux_release.sh
+```
+
+```powershell
+$env:VERSION = '1.0.1'
+.\scripts\build_windows_release.ps1
 ```
 
 ## 指定 Flutter
@@ -74,7 +88,8 @@ $env:FLUTTER = 'C:\path\to\flutter\bin\flutter.bat'
 - 只有推送 `v*` 标签（例如 `v1.0.1`）才会自动构建：
   1. 在 Ubuntu 上分析、测试并构建 Linux x64 压缩包；
   2. 在 Windows 上构建 Windows x64 压缩包；
-  3. 把两个压缩包附加到对应的 GitHub Release。
+  3. 把两个带版本号的压缩包（如 `faria2-1.0.1-linux-x64.tar.gz`、
+     `faria2-1.0.1-windows-x64.zip`）附加到对应的 GitHub Release。
 - `main` / `master` 的普通提交不会触发工作流。
 - 也可以在 GitHub 的 **Actions → Build release → Run workflow** 手动触发，
   构建完成后从该次运行的 Artifacts 下载压缩包（不会创建 Release）。
